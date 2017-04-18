@@ -1,0 +1,71 @@
+c = [0,0,0,0] #F L B R
+l = [0,0] #x y
+prev = 0
+
+def turn_right():
+    repeat(turn_left,3)
+
+def check():
+    facing_north()
+    for i in range(0,4):
+        c[i] = front_is_clear()
+        turn_left()
+
+#set---------------------
+
+def set_front():
+    while not(facing_north()):
+        turn_left()
+
+def set_left():
+    set_front()
+    repeat(turn_left,1)
+
+def set_back():
+    set_front()
+    repeat(turn_left,2)
+
+def set_right():
+    set_front()
+    repeat(turn_left,3)
+
+#move--------------------
+
+def move_front():
+    set_front()
+    move()
+    l[1] += 1
+
+def move_left():
+    set_left()
+    move()
+    l[0] -= 1
+
+def move_back():
+    set_back()
+    move()
+    l[1] -= 1
+
+def move_right():
+    set_right()
+    move()
+    l[0] += 1
+
+#cal---------------------
+
+def cal_inter():
+    sum = 0
+    for i in range(0,4):
+        sum = sum + c[i]
+    return sum
+
+#run---------------------
+
+set_front()
+check()
+print("F L B R = ",c)
+print("X Y = ",l)
+print(cal_inter())
+
+
+turn_off()
