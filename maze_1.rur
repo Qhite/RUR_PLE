@@ -1,0 +1,51 @@
+c = [0,0,0,0] #F L B R
+prev = 0
+xx = 0
+yy = 0
+
+def turn_right():
+    repeat(turn_left,3)
+
+def check():
+    facing_north()
+    for i in range(0,4):
+        c[i] = front_is_clear()
+        turn_left()
+
+def escape():
+    facing_north()
+    for i in range(0,4):
+        if c[i] == True:
+            move()
+            prev = i
+            break
+        else:
+            turn_left()
+
+def cal_location(x,y):
+    if prev == 0:
+        x += 1
+    elif prev == 1:
+        y += 1
+    elif prev == 2:
+        x -= 1
+    elif prev == 3:
+        y -= 1
+
+def check_prev():
+    c[prev]=False
+
+#facing_north()
+#check()
+#escape()
+
+while 1:
+    facing_north()
+    check()
+    cal_location(xx,yy)
+    print(xx,yy)
+    #check_prev()
+    #print(c)
+    escape()
+    if on_beeper():
+        turn_off()
