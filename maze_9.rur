@@ -1,0 +1,132 @@
+c = [0,0,0,0] #F L B R
+l = [0,0] #x y
+m = [0,0,0,0,0,0,0,0,0,0,0,0]
+inter = [[99,99],[0,0]]
+prev = 0
+ml = 0
+
+
+def turn_right():
+    repeat(turn_left,3)
+
+#set---------------------
+
+def set_front():
+    while not(facing_north()):
+        turn_left()
+
+def set_left():
+    set_front()
+    repeat(turn_left,1)
+
+def set_back():
+    set_front()
+    repeat(turn_left,2)
+
+def set_right():
+    set_front()
+    repeat(turn_left,3)
+
+#move--------------------
+
+def move_front():
+    set_front()
+    move()
+    l[1] += 1
+    prev = 1
+    m[ml] = 1
+    ml += 1
+
+def move_left():
+    set_left()
+    move()
+    l[0] -= 1
+    prev = 2
+    m[ml] = 2
+    ml += 1
+
+def move_back():
+    set_back()
+    move()
+    l[1] -= 1
+    prev = 3
+    m[ml] = 3
+    ml += 1
+
+def move_right():
+    set_right()
+    move()
+    l[0] += 1
+    prev = 4
+    m[ml] = 4
+    ml += 1
+
+def turn_back():
+    while ml >= 0:
+        if m[ml] == 1:
+            move_back()
+        
+        elif m[ml] == 2:
+            move_right()
+        
+        elif m[ml] == 3:
+            move_front()
+        
+        elif m[ml] == 4:
+            move_left()
+        
+        ml -= 1
+
+#cal---------------------
+
+def check():
+    set_front()
+    for i in range(0,4):
+        c[i] = front_is_clear()
+        turn_left()
+    cal_prev()
+
+def cal_inter():
+    sum = 0
+    for i in range(0,4):
+        sum = sum + c[i]
+    if sum >= 2:
+        inter[0] = l
+
+def cal_prev():
+    if prev == 1:
+        c[2] = False
+        
+    elif prev == 2:
+        c[3] = False
+        
+    elif prev == 3:
+        c[0] = False
+        
+    elif prev == 4:
+        c[1] = False
+        
+    elif prev == 0:
+        i = 0
+
+#run---------------------
+
+#set_front()
+#check()
+#cal_inter()
+#print c
+#print l
+#print prev
+
+move_right()
+#print prev
+#check()
+#print c
+#print l
+#cal_inter()
+#print "inter: ",inter[0]
+#print "\n"
+
+turn_off()
+
+#prev, ml, m[]
