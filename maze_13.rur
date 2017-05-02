@@ -1,0 +1,188 @@
+c = [0,0,0,0] #F L B R
+l = [0,0] #x y
+m = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+inter = [[[0,0],[0,0,0,0]],[[0,0],[0,0,0,0]],[[0,0],[0,0,0,0]]]
+prev = 0
+ml = 0
+cs = 0
+ad = 1
+
+i1 = 0
+
+def turn_right():
+    repeat(turn_left,3)
+
+#set---------------------
+
+def set_front():
+    while not(facing_north()):
+        turn_left()
+
+def set_left():
+    set_front()
+    repeat(turn_left,1)
+
+def set_back():
+    set_front()
+    repeat(turn_left,2)
+
+def set_right():
+    set_front()
+    repeat(turn_left,3)
+
+#move--------------------
+
+def move_front(cs):
+    global prev
+    global ml
+    set_front()
+    move()
+    l[1] += 1
+    prev = 1
+    
+    if cs == 0:
+        m[ml] = 1
+        ml += 1
+    elif cs == 1:
+        return 0
+
+def move_left(cs):
+    global prev
+    global ml
+    set_left()
+    move()
+    l[0] -= 1
+    prev = 2
+    
+    if cs == 0:
+        m[ml] = 2
+        ml += 1
+    elif cs == 1:
+        return 0
+
+def move_back(cs):
+    global prev
+    global ml
+    set_back()
+    move()
+    l[1] -= 1
+    prev = 3
+    
+    if cs == 0:
+        m[ml] = 3
+        ml += 1
+    elif cs == 1:
+        return 0
+
+def move_right(cs):
+    global prev
+    global ml
+    set_right()
+    move()
+    l[0] += 1
+    prev = 4
+    
+    if cs == 0:
+        m[ml] = 4
+        ml += 1
+    elif cs == 1:
+        return 0
+
+def turn_back():
+    global ml
+    while (ml >= 0):
+        if m[ml] == 1:
+            move_back(1)
+        
+        elif m[ml] == 2:
+            move_right(1)
+        
+        elif m[ml] == 3:
+            move_front(1)
+        
+        elif m[ml] == 4:
+            move_left(1)
+        
+        ml -= 1
+
+#cal---------------------
+
+def check():
+    set_front()
+    for i in range(0,4):
+        c[i] = front_is_clear()
+        turn_left()
+    cal_prev()
+
+def cal_inter():
+    global i1
+    sum = 0
+    for i in range(0,4):
+        sum = sum + c[i]
+    
+    if sum >=2:
+        inter[i1][0] = l
+
+        inter[i1][1] = c
+
+        i1 += 1
+    return sum
+
+def cal_prev():
+    global prev
+    if prev == 1:
+        c[2] = False
+        
+    elif prev == 2:
+        c[3] = False
+        
+    elif prev == 3:
+        c[0] = False
+        
+    elif prev == 4:
+        c[1] = False
+        
+    elif prev == 0:
+        return 0
+
+def find():
+    global i1, ad
+    check()
+    ss = cal_inter()
+    print l
+    print c
+    print ss
+    print "\n"
+    if ss == 0:
+        turn_back()
+    
+    elif ss == 1:
+        for i in range(0,4):
+            if c[i] == True:
+                if i == 0:
+                    move_front(ad)
+                elif i == 1:
+                    move_left(ad)
+                elif i == 2:
+                    move_back(ad)
+                elif i == 3:
+                    move_right(ad)
+    
+    elif ss == 2:
+        ad = 0
+        turn_back()
+        print inter
+        turn_off()
+    
+    elif ss == 3:
+        return 0
+
+#run---------------------
+
+set_front()
+
+while not(on_beeper()):
+    find()
+    
+
+turn_off()
